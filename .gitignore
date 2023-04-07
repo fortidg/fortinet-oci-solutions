@@ -1,2 +1,9 @@
 *.code-workspace
 **/.DS_Store
+*.tfvars
+*.tfplan
+*.tfstate
+*.tfstate.backup
+*.csv
+.terraform*
+*.pem
