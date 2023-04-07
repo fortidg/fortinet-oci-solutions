@@ -178,11 +178,48 @@ resource "oci_core_virtual_network" "vcn_spoke1" {
   dns_label      = "fgtspoke1"
 }
 
+resource "oci_core_subnet" "spoke1-sub1" {
+  cidr_block     = var.spoke1-subnet["1"]
+  display_name   = "${var.PREFIX}-spoke1-sub1"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_virtual_network.vcn_spoke1.id
+  /* route_table_id             = "${oci_core_route_table.trusted_routetable.id}"
+  security_list_ids          = ["${oci_core_virtual_network.vcn.default_security_list_id}", "${oci_core_security_list.trusted_security_list.id}"]
+  dhcp_options_id            = oci_core_virtual_network.vcn.default_dhcp_options_id
+  dns_label                  = "fgttrusted"
+  prohibit_public_ip_on_vnic = true */
+}
+
+resource "oci_core_subnet" "spoke1-sub2" {
+  cidr_block     = var.spoke1-subnet["2"]
+  display_name   = "${var.PREFIX}-spoke1-sub2"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_virtual_network.vcn_spoke1.id
+  /* route_table_id             = "${oci_core_route_table.trusted_routetable.id}"
+  security_list_ids          = ["${oci_core_virtual_network.vcn.default_security_list_id}", "${oci_core_security_list.trusted_security_list.id}"]
+  dhcp_options_id            = oci_core_virtual_network.vcn.default_dhcp_options_id
+  dns_label                  = "fgttrusted" */
+  prohibit_public_ip_on_vnic = true
+}
+
+
 resource "oci_core_virtual_network" "vcn_spoke2" {
   cidr_block     = var.vcn_cidr_spoke2
   compartment_id = var.compartment_ocid
   display_name   = "${var.PREFIX}-vcn-spoke2"
   dns_label      = "fgtspoke2"
+}
+
+resource "oci_core_subnet" "spoke2-sub1" {
+  cidr_block     = var.spoke2-subnet["1"]
+  display_name   = "${var.PREFIX}-spoke2-sub1"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_virtual_network.vcn_spoke2.id
+  /* route_table_id             = "${oci_core_route_table.trusted_routetable.id}"
+  security_list_ids          = ["${oci_core_virtual_network.vcn.default_security_list_id}", "${oci_core_security_list.trusted_security_list.id}"]
+  dhcp_options_id            = oci_core_virtual_network.vcn.default_dhcp_options_id
+  dns_label                  = "fgttrusted"
+  prohibit_public_ip_on_vnic = true */
 }
 
 resource "oci_core_drg_attachment" "drg_spoke1_attachment" {
@@ -230,18 +267,7 @@ resource "oci_core_drg_route_distribution_statement" "drg_spoke_route_distributi
 }
 
 
-#resource "oci_core_local_peering_gateway" "lpg_hub" {
-#  compartment_id = var.compartment_ocid
-#  vcn_id         = oci_core_virtual_network.vcn.id
-#  display_name   = "${var.PREFIX}-lpg-hub-spoke1"
-#}
 
-#resource "oci_core_local_peering_gateway" "lpg_spoke1" {
-#  compartment_id = var.compartment_ocid
-#  vcn_id         = oci_core_virtual_network.vcn_spoke1.id
-#  peer_id        = oci_core_local_peering_gateway.lpg_hub.id
-#  display_name   = "${var.PREFIX}-lpg-spoke1-hub"
-#}
 
 
 ##############################################################################################################
@@ -350,7 +376,7 @@ resource "oci_core_instance" "vm_fgt_a" {
   shape               = var.instance_shape
   shape_config {
     memory_in_gbs = "16"
-    ocpus         = "4"
+    ocpus         = "2"
   }
 
   create_vnic_details {
@@ -432,7 +458,7 @@ resource "oci_core_instance" "vm_fgt_b" {
   shape               = var.instance_shape
   shape_config {
     memory_in_gbs = "16"
-    ocpus         = "4"
+    ocpus         = "2"
   }
 
   create_vnic_details {
@@ -609,3 +635,4 @@ resource "oci_network_load_balancer_backend" "nlb_trusted_backend_fgtb" {
 
   target_id = oci_core_instance.vm_fgt_b.id
 }
+

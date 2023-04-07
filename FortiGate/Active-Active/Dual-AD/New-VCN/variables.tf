@@ -9,10 +9,12 @@
 # Prefix for all resources created for this deployment in Microsoft Azure
 variable "PREFIX" {
   description = "Added name to each deployed resource"
+  default = "dg-drg-aa"
 }
 
 variable "region" {
   description = "Oracle Cloud region"
+  default = "us-ashburn-1"
 }
 
 ##############################################################################################################
@@ -44,12 +46,12 @@ variable "mp_listing_id" {
 }
 
 variable "mp_listing_resource_id" {
-  default = "ocid1.image.oc1..aaaaaaaagm4k5jqbikfx6f5afc4voff2b5sag7d7ibg3oqpnb4xl332tpxca"
+  default = "ocid1.image.oc1..aaaaaaaa5m67jbvb33hoxpefr7fhfhf7gaeie4xjg7p4heixg25osr5warcq"
 }
 
 // Version
 variable "mp_listing_resource_version" {
-  default = "7.0.5_SR-IOV_Para-Virtualized_Mode"
+  default = "7.2.4_(_X64_)"
 }
 // Cert use for SDN Connector setting
 variable "cert" {
@@ -79,14 +81,14 @@ variable "fgt_byol_license_b" {
 variable "fgt_byol_flexvm_license_a" {
   // Change to your own path
   type    = string
-  default = ""
+  default = "2187528EC688EE862D5D"
 }
 
 // Flex-VM license token for fgt b
 variable "fgt_byol_flexvm_license_b" {
   // Change to your own path
   type    = string
-  default = ""
+  default = "B14F49183C7C790A0394"
 }
 
 ##############################################################################################################
@@ -164,9 +166,30 @@ variable "vcn_cidr_spoke1" {
   default = "172.16.144.0/24"
 }
 
+variable "spoke1-subnet" {
+  type        = map(string)
+  description = ""
+
+  default = {
+    "1" = "172.16.144.0/28"  #sub1
+    "2" = "172.16.144.32/28" #sub2
+    "3" = "172.16.144.64/28" #sub3
+  }
+}
 variable "vcn_cidr_spoke2" {
   type    = string
   default = "172.16.145.0/24"
+}
+
+variable "spoke2-subnet" {
+  type        = map(string)
+  description = ""
+
+  default = {
+    "1" = "172.16.145.0/28"  #sub1
+    "2" = "172.16.145.32/28" #sub2
+    "3" = "172.16.145.64/28" #sub3
+  }
 }
 
 # Choose an Availability Domain (1,2,3)
